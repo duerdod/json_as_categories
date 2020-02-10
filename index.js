@@ -2,27 +2,33 @@ const fs = require('fs');
 
 fs.readFile('categories.json', (err, data) => createCategories(err, JSON.parse(data)));
 
-function createLine(prev) {
-    let final = '';
+function createRow(prev) {
+    let row = '';
     return function (_, current) {
         const { Value } = current.names[0]
-        return final += `${Value}; ${current.id}; ${prev.id};\n`
+        return row += `${Value}; ${current.id}; ${prev.id};\n`
     }
 }
 
 function createCategories(e, data) {
-    let allCategories = data.categories.reduce(createLine({ id: -1 }), '')
+    // Root
+    let allCategories = data.categories.reduce(createRow({ id: -1 }), '')
 
     data.categories.forEach(({ id, categories }) => {
         // Lv2
         if (categories) {
-            allCategories += categories.reduce(createLine({ id }), '')
+            allCategories += categories.reduce(createRow({ id }), '')
             categories.forEach(({ id, categories }) => {
                 // Lv3
                 if (categories) {
-                    allCategories += categories.reduce(createLine({ id }), '')
+                    allCategories += categories.reduce(createRow({ id }), '')
+                    categories.forEach(({ id, categories }) => {
+                        // Lv4
+                        if (categories) {
+                            allCategories += categories.reduce(createRow({ id }), '')
+                        }
+                    })
                 }
-
             })
         }
 
@@ -30,6 +36,6 @@ function createCategories(e, data) {
 
     console.log(allCategories)
 
-    // fs.writeFileSync('converted_subcategories_v2.csv', allCategories)
+    fs.writeFileSync('converted_subcategories_v2.csv', allCategories)
     return allCategories
 }
