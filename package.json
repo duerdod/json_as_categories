@@ -11,5 +11,8 @@
     "url": "https://gitlab.jetshop.se/erikpehrers/json-to-categories.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "json2csv": "^4.5.4"
+  }
 }
