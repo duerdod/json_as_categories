@@ -1,8 +1,10 @@
 const fs = require('fs');
 
+const HEADER = ['Name', 'CategoryID', 'LinkID']
+const VERSION = 'v4'
+
 fs.readFile('categories.json', (err, data) => createCategories(err, JSON.parse(data)));
 
-const HEADER = ['Name', 'CategoryID', 'LinkID']
 
 function createRow(prev) {
     let row = '';
@@ -32,7 +34,7 @@ function createCategories(e, data) {
     console.log(`${allCategories}`)
 
     fs.writeFileSync(
-        'converted_subcategories_v3.csv',
+        `converted_subcategories_${VERSION}.csv`,
         `${HEADER.map(h => h).join(';')}\n${allCategories}`
     )
 
