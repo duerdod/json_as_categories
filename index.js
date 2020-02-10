@@ -15,25 +15,19 @@ function createRow(prev) {
 function createCategories(e, data) {
     // Root
     let allCategories = data.categories.reduce(createRow({ id: -1 }), '')
-    data.categories.forEach(({ id, categories }) => {
-        // Lv2
-        if (categories) {
-            allCategories += categories.reduce(createRow({ id }), '')
-            categories.forEach(({ id, categories }) => {
-                // Lv3
-                if (categories) {
-                    allCategories += categories.reduce(createRow({ id }), '')
-                    categories.forEach(({ id, categories }) => {
-                        // Lv4
-                        if (categories) {
-                            allCategories += categories.reduce(createRow({ id }), '')
-                        }
-                    })
-                }
-            })
-        }
 
-    })
+    // Rest (if any)
+    function generateCategories(categories) {
+        if (!categories) return
+        categories.forEach(cat => {
+            if (cat.categories) {
+                allCategories += cat.categories.reduce(createRow({ id: cat.id }), '')
+                generateCategories(cat.categories)
+            }
+        })
+    }
+
+    generateCategories(data.categories)
 
     console.log(`${allCategories}`)
 
