@@ -4,11 +4,10 @@ fs.readFile('categories.json', (err, data) => createCategories(err, JSON.parse(d
 
 function createLine(prev) {
     let final = '';
-    function callback(_, current) {
+    return function (_, current) {
         const { Value } = current.names[0]
         return final += `${Value}; ${current.id}; ${prev.id};\n`
     }
-    return callback
 }
 
 function createCategories(e, data) {
