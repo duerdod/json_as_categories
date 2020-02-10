@@ -1,10 +1,16 @@
 const fs = require('fs');
 
-const HEADER = ['Name', 'CategoryID', 'LinkID']
-const VERSION = 'v4'
+/*
+Create csv with Name, ID and ParentID based on json input.
+Not generic. Yet.
+*/
 
+const HEADERS = ['Name', 'CategoryID', 'LinkID']
+const VERSION = 'test'
+const FOLDER = `${__dirname}/finished`
+
+// TODO: Add to module exports and invoke it with yarn.
 fs.readFile('categories.json', (err, data) => createCategories(err, JSON.parse(data)));
-
 
 function createRow(prev) {
     let row = '';
@@ -19,6 +25,7 @@ function createCategories(e, data) {
     let allCategories = data.categories.reduce(createRow({ id: -1 }), '')
 
     // Rest (if any)
+    // Call recursivly since we cannot know how deep the category tree is.
     function generateCategories(categories) {
         if (!categories) return
         categories.forEach(cat => {
@@ -31,11 +38,13 @@ function createCategories(e, data) {
 
     generateCategories(data.categories)
 
-    console.log(`${allCategories}`)
+    // Print array with indexes.
+    console.log(`${allCategories.split('\n').map((row, i) => `${i} ${row}\n`).join('')}`)
 
+    // Write to csv.
     fs.writeFileSync(
-        `converted_subcategories_${VERSION}.csv`,
-        `${HEADER.map(h => h).join(';')}\n${allCategories}`
+        `${FOLDER}/converted_subcategories_${VERSION}.csv`,
+        `${HEADERS.map(h => h).join(';')}\n${allCategories}`
     )
 
     return allCategories
