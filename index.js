@@ -3,20 +3,28 @@ const fs = require('fs');
 /*
 Create csv with Name, ID and ParentID based on json input.
 Not generic. Yet.
+
+
+    Globals.
 */
 
-const VERSION = 'test'
-const FOLDER = `/finished`
+const FOLDER = `${__dirname}/finished`
+const VERSION = () => fs.readdirSync(FOLDER).length + 1
 
 /*
     SQL
 */
+
 const CREATE_CATEGORY = (name, category, parent) =>
     `
     INSERT INTO tbl_Categories ([Name], [CategoryID], [LinkID]) VALUES('${name}', ${category}, ${parent})
     INSERT INTO tbl_CategoriesLocalized ([CategoryID], [Culture], [Name]) VALUES(${category}, 'sv-SE', '${name}')
     INSERT INTO tbl_CategoriesInMarkets VALUES(${category}, 1, 1)
     `
+
+/* 
+    Start.
+*/
 
 function createCategories() {
     fs.readFile('categories.json', (err, data) => generateRows(err, JSON.parse(data)));
@@ -30,7 +38,7 @@ function createRow(prev) {
     }
 }
 
-function generateRows(e, data) {
+function generateRows(err, data) {
     // Root
     let allCategories = data.categories.reduce(createRow({ id: -1 }), '')
 
@@ -53,7 +61,7 @@ function generateRows(e, data) {
 
     // Write to csv.
     fs.writeFileSync(
-        `${__dirname}${FOLDER}/converted_subcategories_${VERSION}.csv`,
+        `${FOLDER}/converted_subcategories_${VERSION}.csv`,
         `${allCategories}`
     )
 
