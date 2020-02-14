@@ -4,7 +4,6 @@ const fs = require('fs');
 Create csv with Name, ID and ParentID based on json input.
 Invoke with with `yarn createCategories` or `npm run createCategories`
 
-
     Globals.
 */
 
