@@ -2,7 +2,7 @@ const fs = require('fs');
 
 /*
 Create csv with Name, ID and ParentID based on json input.
-Not generic. Yet.
+Invoke with with `yarn createCategories` or `npm run createCategories`
 
 
     Globals.
@@ -21,10 +21,6 @@ const CREATE_CATEGORY = (name, category, parent) =>
     INSERT INTO tbl_CategoriesLocalized ([CategoryID], [Culture], [Name]) VALUES(${category}, 'sv-SE', '${name}')
     INSERT INTO tbl_CategoriesInMarkets VALUES(${category}, 1, 1)
     `
-
-/* 
-    Start.
-*/
 
 function createCategories() {
     fs.readFile('categories.json', (err, data) => generateRows(err, JSON.parse(data)));
