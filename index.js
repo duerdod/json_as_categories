@@ -56,12 +56,12 @@ function generateRows(err, data) {
 
     generateCategories(data.categories)
 
-    // Print array with indexes.
+    // Print list with indexes.
     console.log(`${allCategories.split('\n').map((row, i) => `${i} ${row}\n`).join('')}`)
 
     // Write to csv.
     fs.writeFileSync(
-        `${FOLDER}/converted_subcategories_${VERSION}.csv`,
+        `${FOLDER}/converted_subcategories_${VERSION()}.csv`,
         `${allCategories}`
     )
 
